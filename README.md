@@ -17,7 +17,7 @@ Spatie is a webdesign agency in Antwerp, Belgium. You'll find an overview of all
 This package can be installed through Composer.
 
 ```bash
-composer require spatie/browsershot
+composer require secomapp/browsershot
 ```
 
 When using Laravel there is a service provider that you can make use of.
