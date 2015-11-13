@@ -21,6 +21,10 @@ class Browsershot {
      */
     private $height;
     /**
+     * @var int
+     */
+    private $quality; 
+    /**
      * @var
      */
     private $URL;
@@ -35,7 +39,7 @@ class Browsershot {
      * @param int $width
      * @param mixed $height
      */
-    public function __construct($binPath = '', $width = 640, $height = 480)
+    public function __construct($binPath = '', $width = 640, $height = 480, $quality = 90)
     {
         if ($binPath == '') {
             $binPath = realpath(dirname(__FILE__) . '/../../../bin/phantomjs');
@@ -44,6 +48,7 @@ class Browsershot {
         $this->binPath = $binPath;
         $this->width = $width;
         $this->height = $height;
+        $this->quality = $quality;
 
         return $this;
     }
@@ -89,6 +94,22 @@ class Browsershot {
     }
 
     /**
+     * Set the image quality.
+     * 
+     * @param int $quality
+     * @return $this
+     * @throws \Excpetion
+     */
+    public function setQuality($quality)
+    {
+        if (! is_numeric($quality) || $quality < 1 || $quality > 100) {
+            throw new Exception('Quality must be a numeric value between 1 - 100');
+        }
+        $this->quality = $quality;
+        return $this;
+    }
+    
+    /**
      * Set to height so the whole page will be rendered.
      *
      * @return $this
@@ -123,7 +144,7 @@ class Browsershot {
      * @return bool
      * @throws \Exception
      */
-    public function save($targetFile, $quality=60, $rWidth=null, $rHeight=null, $callback = null)
+    public function save($targetFile, $rWidth=null, $rHeight=null, $callback = null)
     {
         if ($targetFile == '') {
             throw new Exception('targetfile not set');
@@ -179,12 +200,12 @@ class Browsershot {
                     ->make($targetFile)
                     ->crop($this->width,$this->height,0,0)
                     ->resize($rWidth, $rHeight, $callback)
-                    ->save($targetFile, $quality);
+                    ->save($targetFile, $this->quality);
             }else{
                 $imageManager
                     ->make($targetFile)
                     ->crop($this->width,$this->height,0,0)
-                    ->save($targetFile, $quality);
+                    ->save($targetFile, $this->quality);
             }
         }
 
