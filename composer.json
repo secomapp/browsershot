@@ -1,7 +1,7 @@
 {
-    "name": "spatie/browsershot",
-    "description": "Convert a webpage to an image",
-    "homepage": "https://github.com/spatie/browsershot",
+    "name": "secomapp/browsershot",
+    "description": "Convert a webpage to an image from spatie",
+    "homepage": "https://github.com/secomapp/browsershot",
     "keywords":
         [
             "convert",
