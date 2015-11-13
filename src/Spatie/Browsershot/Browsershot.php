@@ -123,7 +123,7 @@ class Browsershot {
      * @return bool
      * @throws \Exception
      */
-    public function save($targetFile)
+    public function save($targetFile, $quality=60, $rWidth=null, $rHeight=null, $callback = null)
     {
         if ($targetFile == '') {
             throw new Exception('targetfile not set');
@@ -174,10 +174,18 @@ class Browsershot {
 
         if ($this->height > 0) {
             $imageManager = new ImageManager();
-            $imageManager
-                ->make($targetFile)
-                ->crop($this->width, $this->height, 0, 0)
-                ->save($targetFile, 60);
+            if($rWidth !==null || $rHeight!==null){
+                $imageManager
+                    ->make($targetFile)
+                    ->crop($this->width,$this->height,0,0)
+                    ->resize($rWidth, $rHeight, $callback)
+                    ->save($targetFile, $quality);
+            }else{
+                $imageManager
+                    ->make($targetFile)
+                    ->crop($this->width,$this->height,0,0)
+                    ->save($targetFile, $quality);
+            }
         }
 
         return true;
