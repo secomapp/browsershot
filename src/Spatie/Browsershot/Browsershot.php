@@ -32,14 +32,17 @@ class Browsershot {
      * @var string
      */
     private $binPath;
-
+    /**
+     * @var int
+     */
+    private $waitTime; 
 
     /**
      * @param string $binPath The path to the phantomjs binary
      * @param int $width
      * @param mixed $height
      */
-    public function __construct($binPath = '', $width = 640, $height = 480, $quality = 90)
+    public function __construct($binPath = '', $width = 640, $height = 480, $quality = 90,$waitTime=5000)
     {
         if ($binPath == '') {
             $binPath = realpath(dirname(__FILE__) . '/../../../bin/phantomjs');
@@ -49,6 +52,7 @@ class Browsershot {
         $this->width = $width;
         $this->height = $height;
         $this->quality = $quality;
+        $this->waitTime = $waitTime;
 
         return $this;
     }
@@ -108,6 +112,23 @@ class Browsershot {
         $this->quality = $quality;
         return $this;
     }
+    
+    /**
+     * Set the time for phantomjs to process all javascript (ms)
+     * 
+     * @param int $waitTime
+     * @return $this
+     * @throws \Excpetion
+     */
+    public function setWaitTime($waitTime)
+    {
+        if (! is_numeric($waitTime) || $waitTime < 1000 ) {
+            throw new Exception('Quality must be a numeric value greater than 1000 (1 second)');
+        }
+        $this->waitTime = $waitTime;
+        return $this;
+    }
+    
     
     /**
      * Set to height so the whole page will be rendered.
@@ -177,7 +198,7 @@ class Browsershot {
                window.setTimeout(function(){
                 page.render('" . $targetFile . "');
                 phantom.exit();
-            }, 5000); // give phantomjs 5 seconds to process all javascript
+            }, ".$this->waitTime."); // give phantomjs time to process all javascript
         });";
 
         fwrite($tempJsFileHandle, $fileContent);
